@@ -26,7 +26,7 @@ int main() {
     roster5K.deleteRosterFile(); // Delete file for testing purposes ONLY!!!
     roster10K.deleteRosterFile(); // Delete file for testing purposes ONLY!!!
     rosterHalf.deleteRosterFile(); // Delete file for testing purposes ONLY!!!
-    rosterFull.deleteRosterFile(); // Delete file for testing purposes ONLY!!!
+    rosterFull.deleteRosterFile(); // Delete file for testing purposes ONLY!!! haha
 
     //---------------------------------------------------------------------------------------
     // TEST CASE 2.2.1
