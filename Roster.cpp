@@ -184,6 +184,7 @@ int Roster::getAmountDue(string timestamp) {
         // periods.find(racePeriod) searches the inner map for the key racePeriod. If it finds this period, it returns an iterator pointing to the key-value pair
         // otherwise, it returns periods.end()
         if (periods.find(racePeriod) != periods.end()) {
+            // periods.at(racePeriod) accesses the fee associated with the racePeriod key in the periods map and returns it directly as the result of the function.
             return periods.at(racePeriod);
         }
     }
