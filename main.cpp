@@ -29,68 +29,10 @@ int main() {
     rosterFull.deleteRosterFile(); // Delete file for testing purposes ONLY!!!
 
     //---------------------------------------------------------------------------------------
-    // TEST CASE 2.2.1
+    // TEST CASE 3.1.1
     //---------------------------------------------------------------------------------------
-    cout << "\nTEST CASE 2.2.1:" << endl;
-    rosterHalf.addRunner("Ethan", "Davis", "20000504", "Male", "ethan.davis@gmail.com", "20250325 17:30:50");
-    rosterHalf.printRunner("Ethan", "Davis");
-    cout << "\n\n";
-    //---------------------------------------------------------------------------------------
-    // TEST CASE 2.2.2
-    //---------------------------------------------------------------------------------------
-    cout << "TEST CASE 2.2.2:" << endl;
-    roster5K.printRunner("Ethan", "Davis");
-    cout << "\n\n";
-    //---------------------------------------------------------------------------------------
-    // TEST CASE 2.2.3
-    //---------------------------------------------------------------------------------------
-    cout << "TEST CASE 2.2.3:" << endl;
-    
-    bool in5K = roster5K.runnerExists("Ethan", "Davis", "ethan.davis@gmail.com");
-    bool in10K = roster10K.runnerExists("Ethan", "Davis", "ethan.davis@gmail.com");
-    bool inHalf = rosterHalf.runnerExists("Ethan", "Davis", "ethan.davis@gmail.com");
-    bool inFull = rosterFull.runnerExists("Ethan", "Davis", "ethan.davis@gmail.com");
-
-    if (in5K == false && in10K == false && inHalf == false && inFull == false) {
-        rosterHalf.addRunner("Ethan", "Davis", "20000504", "Male", "ethan.davis@gmail.com", "20250325 17:30:50");
-    }
-    else {
-        if (in5K == true) {
-            cout << "Sign up failed. User already in 5K roster" << endl;
-        }
-        else if (in10K == true) {
-            cout << "Sign up failed. User already in 10K roster" << endl;
-        }
-        else if (inHalf == true) {
-            cout << "Sign up failed. User already in Half Marathon roster" << endl;
-        }
-        else if (inFull == true) {
-            cout << "Sign up failed. User already in Full Marathon roster" << endl;
-        }
-    }
-
-    cout << "\n\n";
-    //---------------------------------------------------------------------------------------
-    // TEST CASE 2.2.4
-    //---------------------------------------------------------------------------------------
-    cout << "TEST CASE 2.2.4:" << endl;
-    string raceBeingRan = "15K";
-    
-    if (raceBeingRan == "5K") {
-        roster5K.addRunner("Isabella", "Garcia", "19950814", "Female", "isabella.garcia@gmail.com", "20250328 07:40:15");
-    }
-    else if (raceBeingRan == "10K") {
-        roster10K.addRunner("Isabella", "Garcia", "19950814", "Female", "isabella.garcia@gmail.com", "20250328 07:40:15");
-    }
-    else if (raceBeingRan == "Half") {
-        rosterHalf.addRunner("Isabella", "Garcia", "19950814", "Female", "isabella.garcia@gmail.com", "20250328 07:40:15");
-    }
-    else if (raceBeingRan == "Full") {
-        rosterFull.addRunner("Isabella", "Garcia", "19950814", "Female", "isabella.garcia@gmail.com", "20250328 07:40:15");
-    }
-    else {
-        cerr << "Sign up failed. Invalid or missing race." << endl;
-    }
+    cout << "\nTEST CASE 3.1.1:" << endl;
+    roster5K.addRunner("Bob", "Smith", "19980707", "Male", "smith665@gmail.com", "20241016 21:07:38");
 
     cout << "\n\n";
 

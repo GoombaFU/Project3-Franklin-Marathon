@@ -4,7 +4,7 @@ Roster::Roster(string name, string raceName) {
     filename = name;
 
     if (raceName != "5K" && raceName != "10K" && raceName != "Half Marathon" && raceName != "Full Marathon") {
-        throw invalid_argument("Invalid race name. Allowed values are: '5K', '10K', 'Half', or 'Full'.");
+        throw invalid_argument("Invalid race name. Allowed values are: '5K', '10K', 'Half Marathon', or 'Full Marathon'.");
     }
     else {
         race = raceName;
@@ -168,4 +168,25 @@ void Roster::printRunner(string firstName, string lastName) {
     if (runnerFound == false) {
         cerr << "User was not found in the " << race << " roster." << endl;
     }
+}
+
+int Roster::getAmountDue(string timestamp) {
+    timestampUtils tsu;
+    string racePeriod = tsu.getRaceCalendarPeriod(timestamp);
+
+    // raceFees.find(race) searches the map raceFees for the key race. If race exists in the map, it returns an iterator pointing to the key-value pair
+    // otherwise, it returns an iterator to raceFees.end()
+    if (raceFees.find(race) != raceFees.end()) {
+        // raceFees.at(race) retrieves the value associated with the key race from the raceFees map. 
+        // This value is itself a map (mapping racePeriod strings to fees)
+        const auto periods = raceFees.at(race);
+
+        // periods.find(racePeriod) searches the inner map for the key racePeriod. If it finds this period, it returns an iterator pointing to the key-value pair
+        // otherwise, it returns periods.end()
+        if (periods.find(racePeriod) != periods.end()) {
+            return periods.at(racePeriod);
+        }
+    }
+
+    return 0; // Meaning default fee when closed or not open are the selected race periods.
 }
