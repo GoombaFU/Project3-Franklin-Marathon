@@ -2,15 +2,7 @@
 - Given a timestamp in the format of YYYYMMDD HH:MM:SS, the system
 shall be able to determine the location of that time within the race calendar year,
 according to the following table:
-------------------------------------------------------------------------------------
-Dates Race Calendar Period
-1 Jun – 30 Sep | Registration Not Open
-Oct 1 – Oct 31 | Super Early
-Nov 1 – Feb 28/29 | Early
-Mar 1 – Apr 1 | Baseline
-Apr 2 – TDay | Late
-TDay – 31 May | Registration Closed
-------------------------------------------------------------------------------------
+![image](https://github.com/user-attachments/assets/351c344a-6f87-46c5-8937-5bcb32253547)
 - where TDay is the Thursday before the first Saturday of May.
 
 ## TDD Requirement 1.2:
@@ -23,14 +15,7 @@ half marathons.)
 - Given the information in the column on the left, the system shall add a runner to
 the race roster that includes the information in the column on the right.
 Info from Registration Info Stored in Race Roster
-------------------------------------------------------------------------------------
-a. First Name | a. First Name
-b. Last Name | b. Last Name
-c. Date of Birth | c. Age on Race Day
-d. Gender | d. Gender
-e. Email Address | e. Email Address
-f. Registration Timestamp | f. Registration Timestamp
-------------------------------------------------------------------------------------
+![image](https://github.com/user-attachments/assets/726198b0-afa9-4652-be33-279209a9355c)
 - (At this point in the development effort, there should only be one race roster.)
 
 ## TDD Requirement 2.2:
@@ -45,13 +30,7 @@ does not need to be included in each data record.)
 ## TDD Requirement 3.1:
 - Given a registration timestamp and a race distance, the system shall calculate the correct
 price for the race using the following table:
-------------------------------------------------------------------------------------
-Period	      5K	  10K	  Half	Full
-Super Early 	$30	  $50	  $65	  $75
-Early	        $40	  $55	  $70	  $80
-Baseline	    $50	  $70	  $85	  $85
-Late	        $64	  $89	  $99	  $109
-------------------------------------------------------------------------------------
+![image](https://github.com/user-attachments/assets/40877f30-7a8f-47a8-a9ee-21f74bcbff0d)
 
 ## TDD Requirement 3.2:
 - The system shall add an “Amount Paid” field to the race roster records showing
@@ -71,16 +50,8 @@ and the system will allow no more than 100 runners to sign up for events on Sund
 ## TDD Requirement 5.1:
 - The system shall be able to print off rosters for all races, showing these fields
 for each runner:
-------------------------------------------------------------------------------------
-Info Stored in Race Roster
-a. First Name
-b. Last Name
-c. Age on Race Day
-d. Gender
-e. Email Address
-f. Registration Timestamp
-g. Total Amount Paid
-------------------------------------------------------------------------------------
+![image](https://github.com/user-attachments/assets/310a32cf-4236-4a70-aa17-32b9adf9943c)
+
 - At the bottom of each roster, the system will print the number of runners who have
 signed up for that event. (See the example table on the next page to see what would
 look like.)
