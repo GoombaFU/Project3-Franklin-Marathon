@@ -21,7 +21,6 @@ class Roster {
             {"Half Marathon", {{"Super Early", 65}, {"Early", 70}, {"Baseline", 85}, {"Late", 99}}},
             {"Full Marathon", {{"Super Early", 75}, {"Early", 80}, {"Baseline", 85}, {"Late", 109}}}
         };
-        int getAmountDue(string);
 
     public:
         Roster(string, string);
@@ -32,4 +31,5 @@ class Roster {
         void deleteRosterFile();
         void printRunner(string, string);
         bool runnerExists(string, string, string);
+        int getAmountDue(string);
 };
