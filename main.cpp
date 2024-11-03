@@ -140,6 +140,13 @@ int main() {
     rosterFull.addRunner("Zoe", "King", "19990830", "Female", "zoe.king@gmail.com", "20250420 14:55:45");
     cout << "Your amount due is $" << rosterFull.getAmountDue("20250420 14:55:45") << endl;
     cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 3.2.1
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 3.2.1:" << endl;
+    roster5K.addRunner("Adam", "Hall", "19871005", "Male", "adam.hall@gmail.com", "20251027 10:50:15");
+    roster5K.printRunner("Adam", "Hall");
+    cout << "\n\n";
 
     return 0;
 }

@@ -5,7 +5,7 @@ Runner::Runner() {
     ageOnRaceDay = 0;
 }
 
-Runner::Runner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, string race) {
+Runner::Runner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, string race, int money) {
     firstName = removeSpaces(fn);
     lastName = removeSpaces(ln);
 
@@ -24,6 +24,7 @@ Runner::Runner(string fn, string ln, string dateOfBirth, string gen, string mail
     gender = gen; // Doesnt need to remove spaces due to validateRunner function
     email = removeSpaces(mail);
     registrationTimestamp = time;
+    amountPaid = money;
 }
 
 string Runner::removeSpaces(string input) {
@@ -129,4 +130,8 @@ string Runner::getEmail() {
 
 string Runner::getRegistrationTimestamp() {
     return registrationTimestamp;
+}
+
+int Runner::getAmountPaid() {
+    return amountPaid;
 }

@@ -142,7 +142,7 @@ bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, str
         }
     } */
 
-    Runner current(fn, ln, dateOfBirth, gen, mail, time, race);
+    Runner current(fn, ln, dateOfBirth, gen, mail, time, race, getAmountDue(time));
     roster.push_back(current);
     saveRosterToFile();
     return true;
@@ -161,6 +161,7 @@ void Roster::printRunner(string firstName, string lastName) {
             cout << "Email Address: " << runner.getEmail() << endl;
             cout << "Registration Timestamp: " << runner.getRegistrationTimestamp() << endl;
             cout << "Race Being Ran: " << race << endl;
+            cout << "Amount Paid: $" << runner.getAmountPaid() << endl;
             runnerFound = true; // don't break out of loop in case there are multiple users with the same name
         }
     }

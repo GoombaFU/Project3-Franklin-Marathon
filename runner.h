@@ -12,11 +12,12 @@ class Runner {
         string gender;
         string email;
         string registrationTimestamp;
+        int amountPaid;
         string removeSpaces(string);
 
     public:
         Runner(); // Default constructor
-        Runner(string, string, string, string, string, string, string);
+        Runner(string, string, string, string, string, string, string, int);
         void serialize(ofstream&) const;
         void deserialize(ifstream&);
         string getFirstName();
@@ -25,4 +26,5 @@ class Runner {
         string getGender();
         string getEmail();
         string getRegistrationTimestamp();
+        int getAmountPaid();
 };
