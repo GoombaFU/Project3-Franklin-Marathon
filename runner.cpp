@@ -135,3 +135,7 @@ string Runner::getRegistrationTimestamp() {
 int Runner::getAmountPaid() {
     return amountPaid;
 }
+
+void Runner::setAmountPaid(int amount) {
+    amountPaid = amount;
+}

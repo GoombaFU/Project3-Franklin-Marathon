@@ -27,4 +27,5 @@ class Runner {
         string getEmail();
         string getRegistrationTimestamp();
         int getAmountPaid();
+        void setAmountPaid(int);
 };

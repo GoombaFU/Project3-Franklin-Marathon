@@ -130,7 +130,7 @@ bool Roster::runnerExists(string fn, string ln, string mail) {
     return false;
 }
 
-bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, string mail, string time) {
+bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, int amount) {
     if (!validateRunner(fn, ln, dateOfBirth, gen, mail, time)) {
         return false;
     }
@@ -142,7 +142,12 @@ bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, str
         }
     } */
 
-    Runner current(fn, ln, dateOfBirth, gen, mail, time, race, getAmountDue(time));
+    if (runnerExists(fn, ln, mail)) {
+        cerr << "Sign up failed. User is already registered." << endl;
+        return false;
+    }
+
+    Runner current(fn, ln, dateOfBirth, gen, mail, time, race, amount);
     roster.push_back(current);
     saveRosterToFile();
     return true;
@@ -153,14 +158,13 @@ void Roster::printRunner(string firstName, string lastName) {
 
     for (auto runner : roster) {
         if (runner.getFirstName() == firstName && runner.getLastName() == lastName) {
-            cout << "User found. Here is the information:" << endl;
+            cout << "User found in the " << race << " roster. Here is the information:" << endl;
             cout << "First Name: " << runner.getFirstName() << endl;
             cout << "Last Name: " << runner.getLastName() << endl;
             cout << "Age on Race Day: " << runner.getAgeOnRaceDay() << endl;
             cout << "Gender: " << runner.getGender() << endl;
             cout << "Email Address: " << runner.getEmail() << endl;
             cout << "Registration Timestamp: " << runner.getRegistrationTimestamp() << endl;
-            cout << "Race Being Ran: " << race << endl;
             cout << "Amount Paid: $" << runner.getAmountPaid() << endl;
             runnerFound = true; // don't break out of loop in case there are multiple users with the same name
         }
@@ -191,4 +195,14 @@ int Roster::getAmountDue(string timestamp) {
     }
 
     return 0; // Meaning default fee when closed or not open are the selected race periods.
+}
+
+pair<int, Runner*> Roster::getAmountPaidAndRunner(string fn, string ln, string mail) {
+    for (auto& runner : roster) { 
+        if ((runner.getFirstName() == fn && runner.getLastName() == ln) || (runner.getEmail() == mail)) {
+            return {runner.getAmountPaid(), &runner}; 
+        }
+    }
+
+    return {0, nullptr};
 }

@@ -27,9 +27,10 @@ class Roster {
         void saveRosterToFile();
         void loadRosterFromFile();
         vector<Runner> getRoster();
-        bool addRunner(string, string, string, string, string, string);
+        bool addRunner(string, string, string, string, string, string, int);
         void deleteRosterFile();
         void printRunner(string, string);
         bool runnerExists(string, string, string);
         int getAmountDue(string);
+        pair<int, Runner*> getAmountPaidAndRunner(string, string, string);
 };
