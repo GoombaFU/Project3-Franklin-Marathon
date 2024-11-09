@@ -15,12 +15,6 @@ class Roster {
         string race;
         vector<Runner> roster;
         bool validateRunner(string, string, string, string, string, string);
-        const unordered_map<string, unordered_map<string, int>> raceFees = {
-            {"5K", {{"Super Early", 30}, {"Early", 40}, {"Baseline", 50}, {"Late", 64}}},
-            {"10K", {{"Super Early", 50}, {"Early", 55}, {"Baseline", 70}, {"Late", 89}}},
-            {"Half Marathon", {{"Super Early", 65}, {"Early", 70}, {"Baseline", 85}, {"Late", 99}}},
-            {"Full Marathon", {{"Super Early", 75}, {"Early", 80}, {"Baseline", 85}, {"Late", 109}}}
-        };
 
     public:
         Roster(string, string);
@@ -31,6 +25,7 @@ class Roster {
         void deleteRosterFile();
         void printRunner(string, string);
         bool runnerExists(string, string, string);
-        int getAmountDue(string);
         pair<int, Runner*> getAmountPaidAndRunner(string, string, string);
+        int getRosterSize();
+        void clearRoster();
 };

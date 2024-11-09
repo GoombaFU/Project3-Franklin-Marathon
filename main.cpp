@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <map>
 #include "timestampUtils.h"
 #include "Roster.h"
 #include "Runner.h"
@@ -35,69 +36,53 @@ int getAmountDue(string timestamp, string race1, string race2) {
     string racePeriod = tsu.getRaceCalendarPeriod(timestamp);
     int amountDue = 0;
 
-    if (race1 == "5K") {
-        if (racePeriod == "Super Early") {
-            amountDue += 30;
+    const map<string, map<string, int>> raceFees = {
+        {"5K",   {{"Super Early", 30}, {"Early", 40}, {"Baseline", 50}, {"Late", 64}}},
+        {"10K",  {{"Super Early", 50}, {"Early", 55}, {"Baseline", 70}, {"Late", 89}}},
+        {"Half", {{"Super Early", 65}, {"Early", 70}, {"Baseline", 85}, {"Late", 99}}},
+        {"Full", {{"Super Early", 75}, {"Early", 80}, {"Baseline", 85}, {"Late", 109}}}
+    };
+
+    if (raceFees.find(race1) != raceFees.end()) {
+        const auto periods = raceFees.at(race1);
+        if (periods.find(racePeriod) != periods.end()) {
+            amountDue += periods.at(racePeriod);
         }
-        else if (racePeriod == "Early") {
-            amountDue += 40;
-        }
-        else if (racePeriod == "Baseline") {
-            amountDue += 50;
-        }
-        else if (racePeriod == "Late") {
-            amountDue += 64;
-        }
-    }
-    else if (race1 == "10K") {
-       if (racePeriod == "Super Early") {
-            amountDue += 50;
-        }
-        else if (racePeriod == "Early") {
-            amountDue += 55;
-        }
-        else if (racePeriod == "Baseline") {
-            amountDue += 70;
-        }
-        else if (racePeriod == "Late") {
-            amountDue += 89;
-        } 
     }
 
-    if (race2 == "Half") {
-        if (racePeriod == "Super Early") {
-            amountDue += 65;
+    if (raceFees.find(race2) != raceFees.end()) {
+        const auto periods = raceFees.at(race2);
+        if (periods.find(racePeriod) != periods.end()) {
+            amountDue += periods.at(racePeriod);
         }
-        else if (racePeriod == "Early") {
-            amountDue += 70;
-        }
-        else if (racePeriod == "Baseline") {
-            amountDue += 85;
-        }
-        else if (racePeriod == "Late") {
-            amountDue += 99;
-        } 
-    }
-    else if (race2 == "Full") {
-      if (racePeriod == "Super Early") {
-            amountDue += 75;
-        }
-        else if (racePeriod == "Early") {
-            amountDue += 80;
-        }
-        else if (racePeriod == "Baseline") {
-            amountDue += 85;
-        }
-        else if (racePeriod == "Late") {
-            amountDue += 109;
-        }   
     }
 
-    if ((!race1.empty() && !race2.empty())) {
-        amountDue = amountDue * 0.80;
+    if (!race1.empty() && !race2.empty()) {
+        amountDue = static_cast<int>(amountDue * 0.80);
     }
 
     return amountDue;
+}
+
+void addRunnersToRoster(int numRunners, Roster& roster) {
+    timestampUtils tsu;
+
+    for (int i = 0; i < numRunners; ++i) {
+        int onesDigit = i % 10;
+        char letter = 'a' + (onesDigit == 0 ? 9 : onesDigit - 1);
+
+        int tensDigit = (i / 10) % 10;
+        string letterRepetitions(tensDigit + 1, letter);
+
+        string firstName = "First" + letterRepetitions;
+        string lastName = "Last" + letterRepetitions;
+        string email = firstName + lastName + "@gmail.com";
+        string dob = "20000704";
+        string gender = "female";
+        string registrationTimestamp = tsu.getCurrentTimeInEST();
+
+        roster.addRunner(firstName, lastName, dob, gender, email, registrationTimestamp, 0);
+    }
 }
 
 int main() {
@@ -548,7 +533,315 @@ int main() {
     }
 
     cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 4.2.1
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 4.2.1:" << endl;
+    first = "Kevin";
+    last = "Brown";
+    dob = "19931019";
+    gender = "Male";
+    email = "kevin.brown@gmail.com";
+    registrationTimestamp = "20250423 11:55:25";
+    saturdayRace = "10K";
+    sundayRace = "";
 
+    roster5K.clearRoster();
+    roster10K.clearRoster();
+    addRunnersToRoster(39, roster5K);
+    addRunnersToRoster(60, roster10K);
+
+    int saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
+    int sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
+    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+
+    if (saturdayRace == "5K") {
+        if (saturdayRaceSize < 100) {
+            roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 5K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 5K roster as Saturday races are full." << endl;
+        }
+    }
+    else if (saturdayRace == "10K") {
+        if (saturdayRaceSize < 100) {
+            roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 10K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 10K roster as Saturday races are full." << endl;
+        }
+    }
+
+    if (sundayRace == "Half") {
+        if (sundayRaceSize < 100) {
+            rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Half Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Half Marathon roster as Sunday races are full." << endl;
+        }
+    }
+    else if (sundayRace == "Full") {
+        if (sundayRaceSize < 100) {
+            rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Full Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
+        }
+    }
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 4.2.2
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 4.2.2:" << endl;
+    first = "Emily";
+    last = "Nguyen";
+    dob = "19900707";
+    gender = "Female";
+    email = "emily.nguyen@gmail.com";
+    registrationTimestamp = "20250420 14:40:20";
+    saturdayRace = "";
+    sundayRace = "Half";
+
+    rosterHalf.clearRoster();
+    rosterFull.clearRoster();
+    addRunnersToRoster(52, rosterHalf);
+    addRunnersToRoster(47, rosterFull);
+
+    saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
+    sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
+    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+
+    if (saturdayRace == "5K") {
+        if (saturdayRaceSize < 100) {
+            roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 5K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 5K roster as Saturday races are full." << endl;
+        }
+    }
+    else if (saturdayRace == "10K") {
+        if (saturdayRaceSize < 100) {
+            roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 10K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 10K roster as Saturday races are full." << endl;
+        }
+    }
+
+    if (sundayRace == "Half") {
+        if (sundayRaceSize < 100) {
+            rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Half Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Half Marathon roster as Sunday races are full." << endl;
+        }
+    }
+    else if (sundayRace == "Full") {
+        if (sundayRaceSize < 100) {
+            rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Full Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
+        }
+    }
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 4.2.3
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 4.2.3:" << endl;
+    first = "Justin";
+    last = "Sanchez";
+    dob = "20000817";
+    gender = "Male";
+    email = "justin.sanchez@gmail.com";
+    registrationTimestamp = "20250422 07:50:30";
+    saturdayRace = "5K";
+    sundayRace = "";
+
+    roster5K.clearRoster();
+    roster10K.clearRoster();
+    addRunnersToRoster(40, roster5K);
+    addRunnersToRoster(60, roster10K);
+
+    saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
+    sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
+    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+
+    if (saturdayRace == "5K") {
+        if (saturdayRaceSize < 100) {
+            roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 5K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 5K roster as Saturday races are full." << endl;
+        }
+    }
+    else if (saturdayRace == "10K") {
+        if (saturdayRaceSize < 100) {
+            roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 10K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 10K roster as Saturday races are full." << endl;
+        }
+    }
+
+    if (sundayRace == "Half") {
+        if (sundayRaceSize < 100) {
+            rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Half Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Half Marathon roster as Sunday races are full." << endl;
+        }
+    }
+    else if (sundayRace == "Full") {
+        if (sundayRaceSize < 100) {
+            rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Full Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
+        }
+    }
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 4.2.4
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 4.2.4:" << endl;
+    first = "Natalie";
+    last = "Cooper";
+    dob = "19980303";
+    gender = "Female";
+    email = "natalie.cooper@gmail.com";
+    registrationTimestamp = "20250425 18:25:45";
+    saturdayRace = "";
+    sundayRace = "Full";
+
+    rosterHalf.clearRoster();
+    rosterFull.clearRoster();
+    addRunnersToRoster(52, rosterHalf);
+    addRunnersToRoster(48, rosterFull);
+
+    saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
+    sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
+    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+
+    if (saturdayRace == "5K") {
+        if (saturdayRaceSize < 100) {
+            roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 5K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 5K roster as Saturday races are full." << endl;
+        }
+    }
+    else if (saturdayRace == "10K") {
+        if (saturdayRaceSize < 100) {
+            roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 10K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 10K roster as Saturday races are full." << endl;
+        }
+    }
+
+    if (sundayRace == "Half") {
+        if (sundayRaceSize < 100) {
+            rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Half Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Half Marathon roster as Sunday races are full." << endl;
+        }
+    }
+    else if (sundayRace == "Full") {
+        if (sundayRaceSize < 100) {
+            rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Full Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
+        }
+    }
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 4.2.5
+    //---------------------------------------------------------------------------------------
+    cout << "TEST CASE 4.2.5:" << endl;
+    first = "Ryan";
+    last = "Kim";
+    dob = "19890725";
+    gender = "Male";
+    email = "ryan.kim@gmail.com";
+    registrationTimestamp = "20250406 13:10:45";
+    saturdayRace = "10K";
+    sundayRace = "Half";
+
+    roster5K.clearRoster();
+    roster10K.clearRoster();
+    rosterHalf.clearRoster();
+    rosterFull.clearRoster();
+    addRunnersToRoster(39, roster5K);
+    addRunnersToRoster(60, roster10K);
+    addRunnersToRoster(52, rosterHalf);
+    addRunnersToRoster(48, rosterFull);
+
+    saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
+    sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
+    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+
+    if (saturdayRace == "5K") {
+        if (saturdayRaceSize < 100) {
+            roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 5K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 5K roster as Saturday races are full." << endl;
+        }
+    }
+    else if (saturdayRace == "10K") {
+        if (saturdayRaceSize < 100) {
+            roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the 10K roster sucessfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the 10K roster as Saturday races are full." << endl;
+        }
+    }
+
+    if (sundayRace == "Half") {
+        if (sundayRaceSize < 100) {
+            rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Half Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Half Marathon roster as Sunday races are full." << endl;
+        }
+    }
+    else if (sundayRace == "Full") {
+        if (sundayRaceSize < 100) {
+            rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
+            cout << "User has been added to the Full Marathon roster successfully!" << endl;
+        }
+        else {
+            cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
+        }
+    }
+
+    cout << "\n\n";
 
     return 0;
 }

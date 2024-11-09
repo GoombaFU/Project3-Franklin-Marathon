@@ -175,28 +175,6 @@ void Roster::printRunner(string firstName, string lastName) {
     }
 }
 
-int Roster::getAmountDue(string timestamp) {
-    timestampUtils tsu;
-    string racePeriod = tsu.getRaceCalendarPeriod(timestamp);
-
-    // raceFees.find(race) searches the map raceFees for the key race. If race exists in the map, it returns an iterator pointing to the key-value pair
-    // otherwise, it returns an iterator to raceFees.end()
-    if (raceFees.find(race) != raceFees.end()) {
-        // raceFees.at(race) retrieves the value associated with the key race from the raceFees map. 
-        // This value is itself a map (mapping racePeriod strings to fees)
-        const auto periods = raceFees.at(race);
-
-        // periods.find(racePeriod) searches the inner map for the key racePeriod. If it finds this period, it returns an iterator pointing to the key-value pair
-        // otherwise, it returns periods.end()
-        if (periods.find(racePeriod) != periods.end()) {
-            // periods.at(racePeriod) accesses the fee associated with the racePeriod key in the periods map and returns it directly as the result of the function.
-            return periods.at(racePeriod);
-        }
-    }
-
-    return 0; // Meaning default fee when closed or not open are the selected race periods.
-}
-
 pair<int, Runner*> Roster::getAmountPaidAndRunner(string fn, string ln, string mail) {
     for (auto& runner : roster) { 
         if ((runner.getFirstName() == fn && runner.getLastName() == ln) || (runner.getEmail() == mail)) {
@@ -205,4 +183,12 @@ pair<int, Runner*> Roster::getAmountPaidAndRunner(string fn, string ln, string m
     }
 
     return {0, nullptr};
+}
+
+int Roster::getRosterSize() {
+    return roster.size();
+}
+
+void Roster::clearRoster() {
+    roster.clear();
 }
