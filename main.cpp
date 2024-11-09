@@ -3,90 +3,16 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include <map>
 #include "timestampUtils.h"
 #include "Roster.h"
 #include "Runner.h"
+#include "MenuUtils.h"
 
 using namespace std;
 
-bool validateRaceForDay(string race, string day) {
-    if ((day == "Saturday" && (race == "5K" || race == "10K")) || (day == "Sunday" && (race == "Half" || race == "Full")) 
-        || (race == "")) {
-        return true;
-    }
-    else if ((day == "Saturday" && (race == "Half" || race == "Full")) || (day == "Sunday" && (race == "5K" || race == "10K"))) {
-        if (day == "Saturday") {
-            cerr << "Sign up failed. Cannot sign up for a Sunday race on Saturday." << endl;
-        }
-        else if (day == "Sunday") {
-            cerr << "Sign up failed. Cannot sign up for a Saturday race on Sunday." << endl;
-        }
-
-        return false;
-    }
-    else {
-        cerr << "Sign up failed. Invalid Race." << endl;
-        return false;
-    }
-}
-
-int getAmountDue(string timestamp, string race1, string race2) {
-    timestampUtils tsu;
-    string racePeriod = tsu.getRaceCalendarPeriod(timestamp);
-    int amountDue = 0;
-
-    const map<string, map<string, int>> raceFees = {
-        {"5K",   {{"Super Early", 30}, {"Early", 40}, {"Baseline", 50}, {"Late", 64}}},
-        {"10K",  {{"Super Early", 50}, {"Early", 55}, {"Baseline", 70}, {"Late", 89}}},
-        {"Half", {{"Super Early", 65}, {"Early", 70}, {"Baseline", 85}, {"Late", 99}}},
-        {"Full", {{"Super Early", 75}, {"Early", 80}, {"Baseline", 85}, {"Late", 109}}}
-    };
-
-    if (raceFees.find(race1) != raceFees.end()) {
-        const auto periods = raceFees.at(race1);
-        if (periods.find(racePeriod) != periods.end()) {
-            amountDue += periods.at(racePeriod);
-        }
-    }
-
-    if (raceFees.find(race2) != raceFees.end()) {
-        const auto periods = raceFees.at(race2);
-        if (periods.find(racePeriod) != periods.end()) {
-            amountDue += periods.at(racePeriod);
-        }
-    }
-
-    if (!race1.empty() && !race2.empty()) {
-        amountDue = static_cast<int>(amountDue * 0.80);
-    }
-
-    return amountDue;
-}
-
-void addRunnersToRoster(int numRunners, Roster& roster) {
-    timestampUtils tsu;
-
-    for (int i = 0; i < numRunners; ++i) {
-        int onesDigit = i % 10;
-        char letter = 'a' + (onesDigit == 0 ? 9 : onesDigit - 1);
-
-        int tensDigit = (i / 10) % 10;
-        string letterRepetitions(tensDigit + 1, letter);
-
-        string firstName = "First" + letterRepetitions;
-        string lastName = "Last" + letterRepetitions;
-        string email = firstName + lastName + "@gmail.com";
-        string dob = "20000704";
-        string gender = "female";
-        string registrationTimestamp = tsu.getCurrentTimeInEST();
-
-        roster.addRunner(firstName, lastName, dob, gender, email, registrationTimestamp, 0);
-    }
-}
-
 int main() {
     timestampUtils tsu;
+    MenuUtils msu;
     string race1 = "5K_roster.dat";
     string race2 = "10K_roster.dat";
     string race3 = "half_roster.dat";
@@ -242,28 +168,28 @@ int main() {
        cerr << "Sign up failed. Must select at least one race." << endl;
     }
     else {
-        satRaceVerified = validateRaceForDay(saturdayRace, "Saturday");
-        sunRaceVerified = validateRaceForDay(saturdayRace, "Sunday");
+        satRaceVerified = msu.validateRaceForDay(saturdayRace, "Saturday");
+        sunRaceVerified = msu.validateRaceForDay(saturdayRace, "Sunday");
     }
 
     if (satRaceVerified && sunRaceVerified) {
         int amountDue = 0;
 
         if (saturdayRace == "5K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (saturdayRace == "10K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
         if (sundayRace == "Half") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (sundayRace == "Full") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
@@ -290,28 +216,28 @@ int main() {
        cerr << "Sign up failed. Must select at least one race." << endl;
     }
     else {
-        satRaceVerified = validateRaceForDay(saturdayRace, "Saturday");
-        sunRaceVerified = validateRaceForDay(sundayRace, "Sunday");
+        satRaceVerified = msu.validateRaceForDay(saturdayRace, "Saturday");
+        sunRaceVerified = msu.validateRaceForDay(sundayRace, "Sunday");
     }
 
     if (satRaceVerified && sunRaceVerified) {
         int amountDue = 0;
 
         if (saturdayRace == "5K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (saturdayRace == "10K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
         if (sundayRace == "Half") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (sundayRace == "Full") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
@@ -338,28 +264,28 @@ int main() {
        cerr << "Sign up failed. Must select at least one race." << endl;
     }
     else {
-        satRaceVerified = validateRaceForDay(saturdayRace, "Saturday");
-        sunRaceVerified = validateRaceForDay(sundayRace, "Sunday");
+        satRaceVerified = msu.validateRaceForDay(saturdayRace, "Saturday");
+        sunRaceVerified = msu.validateRaceForDay(sundayRace, "Sunday");
     }
 
     if (satRaceVerified && sunRaceVerified) {
         int amountDue = 0;
 
         if (saturdayRace == "5K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (saturdayRace == "10K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
         if (sundayRace == "Half") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (sundayRace == "Full") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
@@ -386,28 +312,28 @@ int main() {
        cerr << "Sign up failed. Must select at least one race." << endl;
     }
     else {
-        satRaceVerified = validateRaceForDay(saturdayRace, "Saturday");
-        sunRaceVerified = validateRaceForDay(sundayRace, "Sunday");
+        satRaceVerified = msu.validateRaceForDay(saturdayRace, "Saturday");
+        sunRaceVerified = msu.validateRaceForDay(sundayRace, "Sunday");
     }
 
     if (satRaceVerified && sunRaceVerified) {
         int amountDue = 0;
 
         if (saturdayRace == "5K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (saturdayRace == "10K") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             roster10K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
         if (sundayRace == "Half") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
         else if (sundayRace == "Full") {
-            amountDue = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+            amountDue = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
             rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountDue);
         }
 
@@ -429,7 +355,7 @@ int main() {
     sundayRace = "";
 
     roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, 
-        getAmountDue(registrationTimestamp, saturdayRace, sundayRace));
+        msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace));
 
     registrationTimestamp = "20250305 09:45:15";
     saturdayRace = "";
@@ -444,26 +370,26 @@ int main() {
 
     if (runnerExists5K) {
         auto [previousAmountPaid, runnerPtr] = roster5K.getAmountPaidAndRunner(first, last, email);
-        amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
+        amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
         runnerPtr->setAmountPaid(amountPaid);
     }
     else if (runnerExists10K) {
         auto [previousAmountPaid, runnerPtr] = roster10K.getAmountPaidAndRunner(first, last, email);
-        amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
+        amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
         runnerPtr->setAmountPaid(amountPaid);
     }
     else if (runnerExistsHalf) {
         auto [previousAmountPaid, runnerPtr] = rosterHalf.getAmountPaidAndRunner(first, last, email);
-        amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
+        amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
         runnerPtr->setAmountPaid(amountPaid);
     }
     else if (runnerExistsFull) {
         auto [previousAmountPaid, runnerPtr] = rosterFull.getAmountPaidAndRunner(first, last, email);
-        amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
+        amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace) + previousAmountPaid;
         runnerPtr->setAmountPaid(amountPaid);
     }
     else {
-        amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+        amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
     }
 
     rosterHalf.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
@@ -487,7 +413,7 @@ int main() {
     saturdayRace = "5K";
     sundayRace = "Full";
 
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
     rosterFull.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
@@ -512,7 +438,7 @@ int main() {
     satRaceVerified = false;
     sunRaceVerified = false;
 
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
     roster5K.addRunner(first, last, dob, gender, email, registrationTimestamp, amountPaid);
     cout << "User has been added to the 5K roster successfully!" << endl;
 
@@ -548,12 +474,12 @@ int main() {
 
     roster5K.clearRoster();
     roster10K.clearRoster();
-    addRunnersToRoster(39, roster5K);
-    addRunnersToRoster(60, roster10K);
+    msu.addRunnersToRoster(39, roster5K);
+    msu.addRunnersToRoster(60, roster10K);
 
     int saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
     int sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     if (saturdayRace == "5K") {
         if (saturdayRaceSize < 100) {
@@ -609,12 +535,12 @@ int main() {
 
     rosterHalf.clearRoster();
     rosterFull.clearRoster();
-    addRunnersToRoster(52, rosterHalf);
-    addRunnersToRoster(47, rosterFull);
+    msu.addRunnersToRoster(52, rosterHalf);
+    msu.addRunnersToRoster(47, rosterFull);
 
     saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
     sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     if (saturdayRace == "5K") {
         if (saturdayRaceSize < 100) {
@@ -670,12 +596,12 @@ int main() {
 
     roster5K.clearRoster();
     roster10K.clearRoster();
-    addRunnersToRoster(40, roster5K);
-    addRunnersToRoster(60, roster10K);
+    msu.addRunnersToRoster(40, roster5K);
+    msu.addRunnersToRoster(60, roster10K);
 
     saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
     sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     if (saturdayRace == "5K") {
         if (saturdayRaceSize < 100) {
@@ -731,12 +657,12 @@ int main() {
 
     rosterHalf.clearRoster();
     rosterFull.clearRoster();
-    addRunnersToRoster(52, rosterHalf);
-    addRunnersToRoster(48, rosterFull);
+    msu.addRunnersToRoster(52, rosterHalf);
+    msu.addRunnersToRoster(48, rosterFull);
 
     saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
     sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     if (saturdayRace == "5K") {
         if (saturdayRaceSize < 100) {
@@ -794,14 +720,14 @@ int main() {
     roster10K.clearRoster();
     rosterHalf.clearRoster();
     rosterFull.clearRoster();
-    addRunnersToRoster(39, roster5K);
-    addRunnersToRoster(60, roster10K);
-    addRunnersToRoster(52, rosterHalf);
-    addRunnersToRoster(48, rosterFull);
+    msu.addRunnersToRoster(39, roster5K);
+    msu.addRunnersToRoster(60, roster10K);
+    msu.addRunnersToRoster(52, rosterHalf);
+    msu.addRunnersToRoster(48, rosterFull);
 
     saturdayRaceSize = roster5K.getRosterSize() + roster10K.getRosterSize();
     sundayRaceSize = rosterHalf.getRosterSize() + rosterFull.getRosterSize();
-    amountPaid = getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
+    amountPaid = msu.getAmountDue(registrationTimestamp, saturdayRace, sundayRace);
 
     if (saturdayRace == "5K") {
         if (saturdayRaceSize < 100) {
