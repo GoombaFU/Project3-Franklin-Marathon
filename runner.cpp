@@ -5,7 +5,7 @@ Runner::Runner() {
     ageOnRaceDay = 0;
 }
 
-Runner::Runner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, string race, int money) {
+Runner::Runner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, string race, double money) {
     firstName = removeSpaces(fn);
     lastName = removeSpaces(ln);
 
@@ -132,7 +132,7 @@ string Runner::getRegistrationTimestamp() {
     return registrationTimestamp;
 }
 
-int Runner::getAmountPaid() {
+double Runner::getAmountPaid() {
     return amountPaid;
 }
 

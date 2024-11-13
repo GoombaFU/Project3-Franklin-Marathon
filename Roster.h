@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <iomanip>
 #include "timestampUtils.h"
 #include "Runner.h"
 
@@ -21,11 +22,12 @@ class Roster {
         void saveRosterToFile();
         void loadRosterFromFile();
         vector<Runner> getRoster();
-        bool addRunner(string, string, string, string, string, string, int);
+        bool addRunner(string, string, string, string, string, string, double);
         void deleteRosterFile();
         void printRunner(string, string);
         bool runnerExists(string, string, string);
         pair<int, Runner*> getAmountPaidAndRunner(string, string, string);
         int getRosterSize();
         void clearRoster();
+        void printRoster();
 };

@@ -152,7 +152,7 @@ int main() {
     //---------------------------------------------------------------------------------------
     // TEST CASE 4.1.1
     //---------------------------------------------------------------------------------------
-    cout << "\nTEST CASE 4.1.1:" << endl;
+    /* cout << "\nTEST CASE 4.1.1:" << endl;
     string first = "Bob";
     string last = "Smith";
     string dob = "19980707";
@@ -766,6 +766,98 @@ int main() {
             cerr << "User was not added to the Full Marathon roster as Sunday races are full." << endl;
         }
     }
+
+    cout << "\n\n"; */
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 5.1.1
+    //---------------------------------------------------------------------------------------
+    cout << "\nTEST CASE 5.1.1:" << endl;
+
+    roster5K.addRunner("Lisa", "Roberts", "19910630", "Female", "lisa.roberts@gmail.com", "20241004 09:45:15", 
+        msu.getAmountDue("20241004 09:45:15", "5K", ""));
+
+    roster5K.addRunner("Bob", "Smith", "19980707", "Male", "smith665@gmail.com", "20241101 08:00:00", 
+        msu.getAmountDue("20241101 08:00:00", "5K", ""));
+
+    roster5K.addRunner("Sarah", "Wilson", "19950415", "Female", "sarah.wilson@gmail.com", "20250302 12:15:30", 
+        msu.getAmountDue("20250302 12:15:30", "5K", ""));
+    
+    roster5K.addRunner("John", "Martinez", "19830505", "Male", "john.martinez@gmail.com", "20250303 14:30:45", 
+        msu.getAmountDue("20250303 14:30:45", "5K", ""));
+
+    roster5K.addRunner("David", "Evans", "20000504", "Male", "david.evans@gmail.com", "20250410 13:20:50", 
+        msu.getAmountDue("20250410 13:20:50", "5K", ""));
+
+    roster5K.printRoster();
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 5.1.2
+    //---------------------------------------------------------------------------------------
+    cout << "\nTEST CASE 5.1.2:" << endl;
+
+    roster10K.addRunner("Maria", "Torres", "19850222", "Female", "maria.torres@gmail.com", "20241012 16:35:25", 
+        msu.getAmountDue("20241012 16:35:25", "10K", ""));
+
+    roster10K.addRunner("Kevin", "Brown", "19931019", "Male", "kevin.brown@gmail.com", "20241123 11:55:25", 
+        msu.getAmountDue("20241123 11:55:25", "10K", ""));
+
+    roster10K.addRunner("Emily", "Nguyen", "19900707", "Female", "emily.nguyen@gmail.com", "20250320 14:40:20", 
+        msu.getAmountDue("20250320 14:40:20", "10K", ""));
+    
+    roster10K.addRunner("Justin", "Sanchez", "20000817", "Male", "justin.sanchez@gmail.com", "20250322 07:50:30", 
+        msu.getAmountDue("20250322 07:50:30", "10K", ""));
+
+    roster10K.addRunner("Natalie", "Cooper", "19980303", "Female", "natalie.cooper@gmail.com", "20250425 18:25:45", 
+        msu.getAmountDue("20250425 18:25:45", "10K", ""));
+
+    roster10K.printRoster();
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 5.1.3
+    //---------------------------------------------------------------------------------------
+    cout << "\nTEST CASE 5.1.3:" << endl;
+
+    rosterHalf.addRunner("Ryan", "Kim", "19890725", "Male", "ryan.kim@gmail.com", "20241006 13:10:45", 
+        msu.getAmountDue("20241006 13:10:45", "Half", ""));
+
+    rosterHalf.addRunner("Sarah", "Lee", "19910515", "Female", "sarah.lee@gmail.com", "20241102 09:45:30", 
+        msu.getAmountDue("20241102 09:45:30", "Half", ""));
+
+    rosterHalf.addRunner("Michael", "Johnson", "19851003", "Male", "michael.johnson@hotmail.com", "20250305 16:22:10", 
+        msu.getAmountDue("20250305 16:22:10", "Half", ""));
+
+    rosterHalf.addRunner("Emily", "Chen", "19980127", "Female", "emily.chen@yahoo.com", "20250410 08:10:55", 
+        msu.getAmountDue("20250410 08:10:55", "Half", ""));
+
+    rosterHalf.printRoster();
+
+    cout << "\n\n";
+    //---------------------------------------------------------------------------------------
+    // TEST CASE 5.1.4
+    //---------------------------------------------------------------------------------------
+    cout << "\nTEST CASE 5.1.4:" << endl;
+
+    rosterFull.addRunner("Jessica", "Taylor", "19930806", "Female", "jessica.taylor@gmail.com", "20241015 12:05:20", 
+        msu.getAmountDue("20241015 12:05:20", "Full", ""));
+
+    rosterFull.addRunner("William", "Martinez", "19880311", "Male", "william.martinez@yahoo.com", "20241018 17:50:35", 
+        msu.getAmountDue("20241018 17:50:35", "Full", ""));
+
+    rosterFull.addRunner("Sophia", "Garcia", "19950922", "Female", "sophia.garcia@aol.com", "20241122 10:15:00", 
+        msu.getAmountDue("20241122 10:15:00", "Full", ""));
+
+    rosterFull.addRunner("Daniel", "Lee", "19820430", "Male", "daniel.lee@gmail.com", "20241125 13:40:25", 
+        msu.getAmountDue("20241125 13:40:25", "Full", ""));
+
+    rosterFull.addRunner("Ashley", "Wilson", "19991212", "Female", "ashley.wilson@hotmail.com", "20250328 09:55:15", 
+        msu.getAmountDue("20250328 09:55:15", "Full", ""));
+
+    rosterFull.addRunner("David", "Brown", "19900219", "Male", "david.brown@outlook.com", "20250412 14:32:45", 
+        msu.getAmountDue("20250412 14:32:45", "Full", ""));
+
+    rosterFull.printRoster();
 
     cout << "\n\n";
 

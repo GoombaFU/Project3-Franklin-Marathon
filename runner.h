@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -12,12 +13,12 @@ class Runner {
         string gender;
         string email;
         string registrationTimestamp;
-        int amountPaid;
+        double amountPaid;
         string removeSpaces(string);
 
     public:
         Runner(); // Default constructor
-        Runner(string, string, string, string, string, string, string, int);
+        Runner(string, string, string, string, string, string, string, double);
         void serialize(ofstream&) const;
         void deserialize(ifstream&);
         string getFirstName();
@@ -26,6 +27,6 @@ class Runner {
         string getGender();
         string getEmail();
         string getRegistrationTimestamp();
-        int getAmountPaid();
+        double getAmountPaid();
         void setAmountPaid(int);
 };

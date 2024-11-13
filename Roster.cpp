@@ -130,17 +130,10 @@ bool Roster::runnerExists(string fn, string ln, string mail) {
     return false;
 }
 
-bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, int amount) {
+bool Roster::addRunner(string fn, string ln, string dateOfBirth, string gen, string mail, string time, double amount) {
     if (!validateRunner(fn, ln, dateOfBirth, gen, mail, time)) {
         return false;
     }
-
-    /* for (auto runner : roster) {
-        if ((runner.getFirstName() == fn && runner.getLastName() == ln) || (runner.getEmail() == mail)) {
-            cerr << "Sign up failed. User is already registered." << endl;
-            return false;
-        }
-    } */
 
     if (runnerExists(fn, ln, mail)) {
         cerr << "Sign up failed. User is already registered." << endl;
@@ -191,4 +184,62 @@ int Roster::getRosterSize() {
 
 void Roster::clearRoster() {
     roster.clear();
+}
+
+void Roster::printRoster() {
+    int widthFirstName = 14;
+    int widthLastName = 13;
+    int widthAge = 5;
+    int widthGender = 9;
+    int widthEmail = 0;
+    int widthRegTimestamp = 20;
+    int widthAmtPaid = 10;
+
+    for (auto runner : roster) {
+        int runnerFirst = runner.getFirstName().length() + 3;
+        int runnerLast = runner.getLastName().length() + 3;
+        int runnerEmail = runner.getEmail().length() + 3;
+
+        if (runnerFirst > widthFirstName) {
+            widthFirstName = runnerFirst + 3;
+        }
+
+        if (runnerLast > widthLastName) {
+            widthLastName = runnerLast + 3;
+        }
+
+        if (runnerEmail > widthEmail) {
+            widthEmail = runnerEmail + 3;
+        }
+    }
+
+    cout << "Here is the " << race << " roster:\n" << endl;
+    cout << left 
+         << setw(widthFirstName) << "First Name" 
+         << setw(widthLastName) << "Last Name" 
+         << setw(widthAge) << "Age" 
+         << setw(widthGender) << "Gender" 
+         << setw(widthEmail) << "Email Address" 
+         << setw(widthRegTimestamp) << "Reg Timestamp" 
+         << setw(widthAmtPaid) << "Amt Paid" 
+         << endl;
+
+    cout << string(widthFirstName + widthLastName + widthAge + widthGender + widthEmail + 
+        widthRegTimestamp + widthAmtPaid, '-') << endl;
+
+    for (auto runner : roster) {
+        cout << left 
+             << setw(widthFirstName) << runner.getFirstName()
+             << setw(widthLastName) << runner.getLastName()
+             << setw(widthAge) << runner.getAgeOnRaceDay()
+             << setw(widthGender) << runner.getGender()
+             << setw(widthEmail) << runner.getEmail()
+             << setw(widthRegTimestamp) << runner.getRegistrationTimestamp()
+             << "$" << setw(widthAmtPaid) << fixed << setprecision(2) << runner.getAmountPaid()
+             << endl;
+    }
+
+    cout << string(widthFirstName + widthLastName + widthAge + widthGender + widthEmail + 
+        widthRegTimestamp + widthAmtPaid, '-') << endl;
+    cout << "There are " << getRosterSize() << " runners registered for this race" << endl;
 }

@@ -18,6 +18,6 @@ class MenuUtils {
 
     public:
         bool validateRaceForDay(string, string);
-        int getAmountDue(string, string, string);
+        double getAmountDue(string, string, string);
         void addRunnersToRoster(int, Roster&);
 };

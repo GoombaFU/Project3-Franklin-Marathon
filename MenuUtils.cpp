@@ -22,10 +22,10 @@ bool MenuUtils::validateRaceForDay(string race, string day) {
     }
 }
 
-int MenuUtils::getAmountDue(string timestamp, string race1, string race2) {
+double MenuUtils::getAmountDue(string timestamp, string race1, string race2) {
     timestampUtils tsu;
     string racePeriod = tsu.getRaceCalendarPeriod(timestamp);
-    int amountDue = 0;
+    double amountDue = 0;
 
     if (raceFees.find(race1) != raceFees.end()) {
         const auto periods = raceFees.at(race1);
@@ -42,7 +42,7 @@ int MenuUtils::getAmountDue(string timestamp, string race1, string race2) {
     }
 
     if (!race1.empty() && !race2.empty()) {
-        amountDue = static_cast<int>(amountDue * 0.80);
+        amountDue = amountDue * 0.80;
     }
 
     return amountDue;
